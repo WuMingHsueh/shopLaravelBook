@@ -2,6 +2,7 @@
 <div class="container">
     <h1>{{$title}}</h1>
 
+    @include('components.validationErrorMessage')
     <form action="sign-up" method="post">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <p>

@@ -8,25 +8,25 @@
         <p>
             <label>
                 暱稱:
-                <input type="text" name="nickname" placeholder="請輸入暱稱">
+                <input type="text" name="nickname" placeholder="請輸入暱稱" value="{{ old('nickname') }}">
             </label>
         </p>
         <p>
             <label>
                 Email:
-                <input type="text" name="email" placeholder="請輸入信箱">
+                <input type="text" name="email" placeholder="請輸入信箱" value="{{ old('email') }}">
             </label>
         </p>
         <p>
             <label>
                 密碼:
-                <input type="password" name="password" placeholder="請輸入密碼">
+                <input type="password" name="password" placeholder="請輸入密碼" value="{{ old('password') }}">
             </label>
         </p>
         <p>
             <label>
                 確認密碼:
-                <input type="password" name="password_confirmation" placeholder="請再次確認密碼">
+                <input type="password" name="password_confirmation" placeholder="請再次確認密碼" value="{{ old('password_confirmation') }}">
             </label>
         </p>
         <p>

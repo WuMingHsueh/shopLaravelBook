@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Validator;
+use Hash;
 
 class UserAuthController extends Controller
 {
@@ -44,7 +45,9 @@ class UserAuthController extends Controller
         ];
         $validator = Validator::make($input, $rules);
         if ($validator->fails()) {
-            return redirect('/user/auth/sign-up')->withErrors($validator);
+            return redirect('/user/auth/sign-up')->withErrors($validator)->withInput();
         }
+
+        $input['password'] = Hash::make($input['password']);
     }
 }

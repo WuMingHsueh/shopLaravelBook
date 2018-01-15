@@ -10,8 +10,16 @@
 
 <body>
     <header>
-        <a href="#">註冊</a>
-        <a href="#">登入</a>
+        <ul class="nav">
+            @if (session()->has('user_id'))
+                <li><a href="sign-out">登出</a></li>
+            @else
+                <li><a href="sign-up">註冊</a></li>
+                <li><a href="sign-in">登入</a></li>
+            @endif
+        </ul>
+        
+        
     </header>
     <div class="container">@yield('content')</div>
     <footer>

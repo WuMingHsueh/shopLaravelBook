@@ -21,6 +21,9 @@ Route::group(['prefix' => 'user'], function () {
     Route::group(['prefix' => 'auth'], function () {
         Route::get('/sign-up', 'UserAuthController@signUpPage');
         Route::post('/sign-up', 'UserAuthController@signUpProcess');
+        Route::get('/sign-in', 'UserAuthController@signInPage');
+        Route::post('/sign-in', 'UserAuthController@signInProcess');
+        Route::get('/sign-out', 'UserAuthController@signOutProcess');
     });
 });
 

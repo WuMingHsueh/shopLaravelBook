@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Shop\Entity\Merchandise;
 use Validator;
+use Image;
 
 class MerchandiseController extends Controller
 {

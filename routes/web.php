@@ -28,10 +28,15 @@ Route::group(['prefix' => 'user'], function () {
 });
 
 // 商品
-Route::get('/merchandise', 'MerchandiseController@merchandiseListPage');
-Route::get('/merchandise/create', 'MerchandiseController@merchandiseCreateProcess');
-Route::get('/merchandise/manage', 'MerchandiseController@merchandiseManageListPage');
-Route::get('/merchandise/{merchandise_id}', 'MerchandiseController@merchandiseItemPage');
-Route::get('/merchandise/{merchandise_id}/edit', 'MerchandiseController@merchandiseItemEditPage');
-Route::put('/merchandise/{merchandise_id}', 'MerchandiseController@merchandiseItemUpdateProcess');
-Route::post('/merchandise/{merchandise_id}/buy', 'MerchandiseController@merchandiseItemBuyProcess');
+Route::group(['prefix' => 'merchandise'], function() {
+    Route::get('/', 'MerchandiseController@merchandiseListPage');
+    Route::get('/create', 'MerchandiseController@merchandiseCreateProcess');
+    Route::get('/mangae', 'MerchandiseController@merchandiseManageListPage');
+    
+    Route::group(['prefix' => '{merchandise_id}'], function() {
+        Route::get('/', 'MerchandiseController@merchandiseItemPage');
+        Route::put('/', 'MerchandiseController@merchandiseItemUpdateProces');
+        Route::get('/edit', 'MerchandiseController@merchandiseItemEditPage');
+        Route::post('/buy', 'MerchandiseController@merchandiseItemBuyProcess');
+    });
+});

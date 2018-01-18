@@ -104,4 +104,23 @@ class MerchandiseController extends Controller
 
         return redirect('/merchandise/' . $Merchandise->id . '/edit');
     }
+
+    public function merchandiseManageListPage()
+    {
+        $rowPerPage = 10;
+        $MerchandisePaginate = Merchandise::OrderBy('created_at', 'desc')->paginate($rowPerPage);
+
+        foreach ($MerchandisePaginate as $Merchandise) {
+            if (!is_null($Merchandise->photo)) {
+                $Merchandise->photo = url($Merchandise->photo);
+            }
+        }
+
+        $binding = [
+            'title' => '商品管理',
+            'MerchandisePaginate' => $MerchandisePaginate
+        ];
+
+        return view('merchandise.manageMerchandise', $binding);
+    }
 }

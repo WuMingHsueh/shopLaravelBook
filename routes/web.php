@@ -31,7 +31,7 @@ Route::group(['prefix' => 'user'], function () {
 Route::group(['prefix' => 'merchandise'], function () {
     Route::get('/', 'MerchandiseController@merchandiseListPage');
     Route::get('/create', 'MerchandiseController@merchandiseCreateProcess')->middleware(['user.auth.admin']);
-    Route::get('/mangae', 'MerchandiseController@merchandiseManageListPage')->middleware(['user.auth.admin']);
+    Route::get('/manage', 'MerchandiseController@merchandiseManageListPage')->middleware(['user.auth.admin']);
     
     Route::group(['prefix' => '{merchandise_id}'], function () {
         Route::post('/buy', 'MerchandiseController@merchandiseItemBuyProcess')->middleware(['user.auth']);

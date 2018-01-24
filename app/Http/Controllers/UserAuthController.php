@@ -7,6 +7,7 @@ use Validator;
 use Hash;
 use Mail;
 use App\Shop\Entity\User;
+use App\Jobs\SendSignUpMailJob;
 
 class UserAuthController extends Controller
 {
@@ -51,17 +52,26 @@ class UserAuthController extends Controller
             return redirect('/user/auth/sign-up')->withErrors($validator)->withInput();
         }
 
+        //已註冊帳號處理
+        if (!is_null(User::where('email', $input['email']))) {
+            $message = [
+                'msg' => [
+                    $input['email'] . " 已存在"
+                ]
+            ];
+            return redirect('/user/auth/sign-up')->withErrors($message)->withInput();
+        }
+
         // 密碼編碼並寫入資料庫
         $input['password'] = Hash::make($input['password']);
         $Users = User::create($input);
 
         // 寄送註冊信
-        $mailBinding = [ 'nickname' => $input['nickname']];
-        Mail::send('email.signUpEmailNotification', $mailBinding, function ($mail) use ($input) {
-            $mail->to($input['email']);
-            $mail->from('rick1870@ares.com.tw');
-            $mail->subject('恭喜註冊 shop Laravel 成功');
-        });
+        $mailBinding = [ 
+            'nickname' => $input['nickname'],
+            'email'    => $input['email']
+        ];
+        SendSignUpMailJob::dispatch($mailBinding);
         return redirect('/user/auth/sign-in');
     }
 

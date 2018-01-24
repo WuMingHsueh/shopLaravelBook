@@ -34,11 +34,13 @@ Route::group(['prefix' => 'merchandise'], function () {
     Route::get('/manage', 'MerchandiseController@merchandiseManageListPage')->middleware(['user.auth.admin']);
     
     Route::group(['prefix' => '{merchandise_id}'], function () {
+        Route::get('/', 'MerchandiseController@merchandiseItemPage');
         Route::post('/buy', 'MerchandiseController@merchandiseItemBuyProcess')->middleware(['user.auth']);
         Route::group(['middleware' => ['user.auth.admin']], function () {
             Route::put('/', 'MerchandiseController@merchandiseItemUpdateProcess');
             Route::get('/edit', 'MerchandiseController@merchandiseItemEditPage');
         });
-        Route::get('/', 'MerchandiseController@merchandiseItemPage');
     });
 });
+
+Route::get('/transaction', 'TransactionController@transactionListPage')->middleware(['user.auth']);

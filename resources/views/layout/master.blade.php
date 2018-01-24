@@ -12,10 +12,10 @@
     <header>
         <ul class="nav">
             @if (session()->has('user_id'))
-                <li><a href="sign-out">登出</a></li>
+                <li><a href="/shopLaravelBook/public/user/auth/sign-out">登出</a></li>
             @else
-                <li><a href="sign-up">註冊</a></li>
-                <li><a href="sign-in">登入</a></li>
+                <li><a href="/shopLaravelBook/public/user/auth/sign-up">註冊</a></li>
+                <li><a href="/shopLaravelBook/public/user/auth/sign-in">登入</a></li>
             @endif
         </ul>
         

@@ -11,7 +11,36 @@ class MerchandiseController extends Controller
 {
     public function merchandiseListPage()
     {
-        return "merchandise list page";
+        $rowPerPage = 10; // 每頁的資料量
+        //撈取商品分頁資料
+        $merchandisePaginate = Merchandise::OrderBy('updated_at', 'desc')
+                                ->where('status', 'S') //可販售
+                                ->paginate($rowPerPage);
+        
+        foreach ($merchandisePaginate as $merchandise) {
+            if (!is_null($merchandise->photo)) {
+                $merchandise->photo = url($merchandise->photo);
+            }
+        }
+
+        $binding = [
+            'title' => '商品列表',
+            'MerchandisePaginate' => $merchandisePaginate
+        ];
+        return view('merchandise.listMerchandise', $binding);
+    }
+
+    public function merchandiseItemPage($merchandise_id) 
+    {
+        $merchandise = Merchandise::findOrFail($merchandise_id);
+        if (!is_null($merchandise->photo)) {
+            $merchandise->photo = url($merchandise->photo);
+        }
+        $binding = [
+            'title' => '商品頁',
+            'merchandise' => $merchandise
+        ];
+        return view('merchandise.showMerchandise', $binding);
     }
 
     public function merchandiseCreateProcess()
@@ -122,5 +151,24 @@ class MerchandiseController extends Controller
         ];
 
         return view('merchandise.manageMerchandise', $binding);
+    }
+
+    public function merchandiseItemBuyProcess($merchandise_id)
+    {
+        $input = request()->all();
+
+        $rules = [
+            'buyCount' => [
+                'required',
+                'integer',
+                'min:1'
+            ]
+        ];
+
+        $validator = Validator::make($input, $rules);
+
+        if ($validator->fails()) {
+            return redirect('/merchandise/' . $merchandise_id)->withErrors($validator)->withInput();
+        }
     }
 }

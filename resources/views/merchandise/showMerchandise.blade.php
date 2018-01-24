@@ -36,7 +36,7 @@
         <tr>
             <td colspan="2">
                 <center>
-                <form action="/shopLaravelBook/public/merchandise/{merchandise_id}/buy" method="post">
+                <form action="/shopLaravelBook/public/merchandise/{{ $merchandise->id }}/buy" method="post">
                     {{csrf_field()}}
                     <select name="buyCount">
                         @for ($i = 1; $i <= $merchandise->remain_count ; $i++)

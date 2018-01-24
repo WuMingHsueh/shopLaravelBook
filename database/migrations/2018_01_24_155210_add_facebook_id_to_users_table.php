@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddBirthdayToUserTable extends Migration
+class AddFacebookIdToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,11 @@ class AddBirthdayToUserTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->date('birthdate');
+            $table->string('facebook_id',30)
+                  ->nullable()
+                  ->after('password'); // 針對postgresql 無效
+
+            $table->index(['facebook_id'], 'user_fb_idx');
         });
     }
 
@@ -25,8 +29,8 @@ class AddBirthdayToUserTable extends Migration
      */
     public function down()
     {
-        Schema::table('user', function (Blueprint $table) {
-            //
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('facebook_id');
         });
     }
 }

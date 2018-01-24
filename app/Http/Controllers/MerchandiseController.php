@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Shop\Entity\Merchandise;
+use App\Shop\Entity\Transaction;
+use App\Shop\Entity\User;
 use Validator;
 use Image;
-
+use DB;
 class MerchandiseController extends Controller
 {
     public function merchandiseListPage()
@@ -169,6 +171,48 @@ class MerchandiseController extends Controller
 
         if ($validator->fails()) {
             return redirect('/merchandise/' . $merchandise_id)->withErrors($validator)->withInput();
+        }
+
+        try {
+            $userId = session()->get('user_id');
+            $User = User::findOrFail($userId);
+            $buyCount = $input['buyCount'];
+            $merchandise = Merchandise::findOrFail($merchandise_id);
+
+            DB::beginTransaction();
+
+            $remainCountAfterBuy = $merchandise->remain_count - $buyCount;
+            if ($remainCountAfterBuy < 0) {
+                throw new Exception('商品數量不足無法購買');
+            }
+            $merchandise->remain_count = $remainCountAfterBuy;
+            $merchandise->save();
+
+            $totalPrice = $buyCount * $merchandise->price;
+            $transactionData = [
+                "user_id" => $userId,
+                "merchandise_id" => $merchandise->id,
+                "price" => $merchandise->price,
+                "buy_count" => $buyCount,
+                "total_price" => $totalPrice
+            ];
+            Transaction::create($transactionData);
+
+            DB::commit();
+            $message = [
+                'msg' => [
+                    '購買成功'
+                ]
+            ];
+            return redirect()->to('/merchandise/'. $merchandise->id)->withErrors($message);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $errorMessage = [
+                'msg' => [
+                    $e->getMessage()
+                ]
+            ];
+            return redirect()->back()->withErrors($message)->withInput();
         }
     }
 }

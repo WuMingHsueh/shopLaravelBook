@@ -38,6 +38,6 @@
             @endforeach
         </tbody>
     </table>
-    {{$MerchandisePaginate->links()}}
+    {{ $MerchandisePaginate->links() }}
 </div>
 @endsection

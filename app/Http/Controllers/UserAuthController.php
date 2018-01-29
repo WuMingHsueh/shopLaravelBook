@@ -52,15 +52,15 @@ class UserAuthController extends Controller
             return redirect('/user/auth/sign-up')->withErrors($validator)->withInput();
         }
 
-        //已註冊帳號處理
-        if (!is_null(User::where('email', $input['email']))) {
-            $message = [
-                'msg' => [
-                    $input['email'] . " 已存在"
-                ]
-            ];
-            return redirect('/user/auth/sign-up')->withErrors($message)->withInput();
-        }
+        // //已註冊帳號處理
+        // if (!is_null(User::where('email', $input['email'])->firstOrFail())) {
+        //     $message = [
+        //         'msg' => [
+        //             $input['email'] . " 已存在"
+        //         ]
+        //     ];
+        //     return redirect('/user/auth/sign-up')->withErrors($message)->withInput();
+        // }
 
         // 密碼編碼並寫入資料庫
         $input['password'] = Hash::make($input['password']);
@@ -71,7 +71,7 @@ class UserAuthController extends Controller
             'nickname' => $input['nickname'],
             'email'    => $input['email']
         ];
-        SendSignUpMailJob::dispatch($mailBinding);
+        SendSignUpMailJob::dispatch($mailBinding)->onQueue('high');
         return redirect('/user/auth/sign-in');
     }
 
